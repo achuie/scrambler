@@ -1,0 +1,9 @@
+[package]
+name = "scrambler"
+version = "0.1.0-alpha"
+description = "Scramble generator for Rubik's cubes"
+edition = "2018"
+
+[profile.release]
+lto = true
+panic = 'abort'
