@@ -41,20 +41,11 @@ impl Cube {
                             res[4] = Face {
                                 tiles: {
                                     let mut ts = [[Color::White; 3]; 3];
-                                    // Top.
-                                    for i in 0..3 {
-                                        ts[0][i] = self.faces[4].tiles[i][2];
+                                    for j in 0..3 {
+                                        for i in (0..3).rev() {
+                                            ts[j][2 - i] = self.faces[4].tiles[i][j];
+                                        }
                                     }
-                                    // Right.
-                                    for i in 1..3 {
-                                        ts[i][2] = self.faces[4].tiles[2][2 - i];
-                                    }
-                                    // Bottom.
-                                    for i in 0..2 {
-                                        ts[2][i] = self.faces[4].tiles[i][0];
-                                    }
-                                    // Left.
-                                    ts[1][0] = self.faces[4].tiles[0][1];
 
                                     ts
                                 },
