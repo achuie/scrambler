@@ -119,6 +119,33 @@ impl Cube {
                     yellow: updated[1],
                 }
             },
+            Turn::F { prime, double } => {
+                let to_update = [self.white, self.orange, self.yellow, self.red];
+                let update_sections =
+                    [Triplet::Bottom, Triplet::Right, Triplet::Top, Triplet::Left];
+                let updated = to_update
+                    .iter()
+                    .enumerate()
+                    .map(|(i, face)| {
+                        let other_idx = {
+                            if double {
+                                (i + 2) % 4
+                            } else {
+                                if prime {
+                                    (i - 1) % 4
+                                } else {
+                                    (i + 1) % 4
+                                }
+                            }
+                        };
+
+                        face.update_triplet(
+                            update_sections[i],
+                            to_update[other_idx].get_triplet(update_sections[other_idx]),
+                        )
+                    })
+                    .collect();
+            },
         }
     }
 }
