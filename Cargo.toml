@@ -4,6 +4,9 @@ version = "0.1.0-alpha"
 description = "Scramble generator for Rubik's cubes"
 edition = "2018"
 
+[dependencies]
+colored = "2.0.0"
+
 [profile.release]
 lto = true
 panic = 'abort'

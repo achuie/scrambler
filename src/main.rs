@@ -1,6 +1,10 @@
 use colored::*;
 
-fn main() {}
+fn main() {
+    let cube = Cube::new();
+    let moved = cube.mv(Turn::U { prime: false, double: false });
+    moved.print();
+}
 
 struct Cube {
     green: Face,
@@ -23,7 +27,37 @@ impl Cube {
         }
     }
 
-    fn looped_update(to_update: [&Face; 4], update_sections: [Triplet; 4], prime: bool, double: bool) -> Vec<Face> {
+    fn print(&self) {
+        for row in &self.white.tiles {
+            print!("      ");
+            for t in row {
+                print!("{}", t);
+            }
+            print!("\n");
+        }
+        for row in 0..3 {
+            for &face in [&self.orange, &self.green, &self.red, &self.blue].iter() {
+                for t in &face.tiles[row] {
+                    print!("{}", t);
+                }
+            }
+            print!("\n");
+        }
+        for row in &self.yellow.tiles {
+            print!("      ");
+            for t in row {
+                print!("{}", t);
+            }
+            print!("\n");
+        }
+    }
+
+    fn looped_update(
+        to_update: [&Face; 4],
+        update_sections: [Triplet; 4],
+        prime: bool,
+        double: bool,
+    ) -> Vec<Face> {
         to_update
             .iter()
             .enumerate()
@@ -66,7 +100,8 @@ impl Cube {
             },
             Turn::D { prime, double } => {
                 let to_update = [&self.green, &self.red, &self.blue, &self.orange];
-                let update_sections = [Triplet::Bottom, Triplet::Bottom, Triplet::Bottom, Triplet::Bottom];
+                let update_sections =
+                    [Triplet::Bottom, Triplet::Bottom, Triplet::Bottom, Triplet::Bottom];
                 let updated = Cube::looped_update(to_update, update_sections, prime, double);
 
                 Cube {
@@ -148,7 +183,7 @@ struct Face {
 
 impl Face {
     fn new(color: Color) -> Self {
-        Face { tiles: vec!(vec!(color; 3); 3) }
+        Face { tiles: vec![vec!(color; 3); 3] }
     }
 
     fn get_triplet(&self, section: &Triplet) -> Vec<Color> {
@@ -164,7 +199,9 @@ impl Face {
         Face {
             tiles: {
                 match section {
-                    Triplet::Top => vec!(cubies.to_vec(), self.tiles[1].clone(), self.tiles[2].clone()),
+                    Triplet::Top => {
+                        vec![cubies.to_vec(), self.tiles[1].clone(), self.tiles[2].clone()]
+                    },
                     Triplet::Right => {
                         let mut tile_array = self.tiles.clone();
                         for i in 0..3 {
@@ -173,7 +210,9 @@ impl Face {
 
                         tile_array
                     },
-                    Triplet::Bottom => vec!(self.tiles[0].clone(), self.tiles[1].clone(), cubies.to_vec()),
+                    Triplet::Bottom => {
+                        vec![self.tiles[0].clone(), self.tiles[1].clone(), cubies.to_vec()]
+                    },
                     Triplet::Left => {
                         let mut tile_array = self.tiles.clone();
                         for i in 0..3 {
@@ -190,7 +229,7 @@ impl Face {
     fn rotate(&self, prime: bool, double: bool) -> Face {
         Face {
             tiles: {
-                let mut tile_array = vec!(vec!(self.tiles[1][1].clone(); 3); 3);
+                let mut tile_array = vec![vec!(self.tiles[1][1].clone(); 3); 3];
                 if double {
                     // 00 01 02    22 21 20
                     // 10 11 12 -> 12 11 10
@@ -244,6 +283,19 @@ enum Color {
     Orange,
     White,
     Yellow,
+}
+
+impl std::fmt::Display for Color {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Color::Green => write!(f, "{}", "\u{2588}\u{2588}".green()),
+            Color::Red => write!(f, "{}", "\u{2588}\u{2588}".red()),
+            Color::Blue => write!(f, "{}", "\u{2588}\u{2588}".blue()),
+            Color::Orange => write!(f, "{}", "\u{2588}\u{2588}".truecolor(255, 102, 0)),
+            Color::White => write!(f, "{}", "\u{2588}\u{2588}".white()),
+            Color::Yellow => write!(f, "{}", "\u{2588}\u{2588}".yellow()),
+        }
+    }
 }
 
 enum Turn {
