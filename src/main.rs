@@ -21,28 +21,37 @@ impl Cube {
         }
     }
 
+    fn looped_update(to_update: [Face; 4], update_sections: [Triplet; 4]) -> [Face; 4] {
+        to_update
+            .iter()
+            .enumerate()
+            .map(|(i, face)| {
+                let other_idx = {
+                    if double {
+                        (i + 2) % 4
+                    } else {
+                        if prime {
+                            (i - 1) % 4
+                        } else {
+                            (i + 1) % 4
+                        }
+                    }
+                };
+
+                face.update_triplet(
+                    update_sections[i],
+                    to_update[other_idx].get_triplet(update_sections[other_idx]),
+                )
+            })
+            .collect()
+    }
+
     fn mv(&self, turn: Turn) -> Self {
         match turn {
             Turn::U { prime, double } => {
                 let to_update = [self.green, self.red, self.blue, self.orange];
-                let updated = to_update
-                    .iter()
-                    .enumerate()
-                    .map(|(i, face)| {
-                        face.update_triplet(
-                            Triplet::Top,
-                            if double {
-                                to_update[(i + 2) % 4].tiles[0]
-                            } else {
-                                if prime {
-                                    to_update[(i - 1) % 4].tiles[0]
-                                } else {
-                                    to_update[(i + 1) % 4].tiles[0]
-                                }
-                            },
-                        )
-                    })
-                    .collect();
+                let update_sections = [Triplet::Top; 4];
+                let updated = Cube::looped_update(to_update, update_sections);
 
                 Cube {
                     green: updated[0],
@@ -55,24 +64,8 @@ impl Cube {
             },
             Turn::D { prime, double } => {
                 let to_update = [self.green, self.red, self.blue, self.orange];
-                let updated = to_update
-                    .iter()
-                    .enumerate()
-                    .map(|(i, face)| {
-                        face.update_triplet(
-                            Triplet::Bottom,
-                            if double {
-                                to_update[(i + 2) % 4].tiles[2]
-                            } else {
-                                if prime {
-                                    to_update[(i - 1) % 4].tiles[2]
-                                } else {
-                                    to_update[(i + 1) % 4].tiles[2]
-                                }
-                            },
-                        )
-                    })
-                    .collect();
+                let update_sections = [Triplet::Bottom; 4];
+                let updated = Cube::looped_update(to_update, update_sections);
 
                 Cube {
                     green: updated[0],
@@ -87,28 +80,7 @@ impl Cube {
                 let to_update = [self.green, self.yellow, self.blue, self.white];
                 let update_sections =
                     [Triplet::Right, Triplet::Right, Triplet::Left, Triplet::Right];
-                let updated = to_update
-                    .iter()
-                    .enumerate()
-                    .map(|(i, face)| {
-                        let other_idx = {
-                            if double {
-                                (i + 2) % 4
-                            } else {
-                                if prime {
-                                    (i - 1) % 4
-                                } else {
-                                    (i + 1) % 4
-                                }
-                            }
-                        };
-
-                        face.update_triplet(
-                            update_sections[i],
-                            to_update[other_idx].get_triplet(update_sections[other_idx]),
-                        )
-                    })
-                    .collect();
+                let updated = Cube::looped_update(to_update, update_sections);
 
                 Cube {
                     green: updated[0],
@@ -119,32 +91,49 @@ impl Cube {
                     yellow: updated[1],
                 }
             },
+            Turn::L { prime, double } => {
+                let to_update = [self.green, self.yellow, self.blue, self.white];
+                let update_sections = [Triplet::Left, Triplet::Left, Triplet::Right, Triplet::Left];
+                let updated = Cube::looped_update(to_update, update_sections);
+
+                Cube {
+                    green: updated[0],
+                    red: self.red.clone(),
+                    blue: updated[2],
+                    orange: self.orange.rotate(prime, double),
+                    white: updated[3],
+                    yellow: updated[1],
+                }
+            },
             Turn::F { prime, double } => {
                 let to_update = [self.white, self.orange, self.yellow, self.red];
                 let update_sections =
                     [Triplet::Bottom, Triplet::Right, Triplet::Top, Triplet::Left];
-                let updated = to_update
-                    .iter()
-                    .enumerate()
-                    .map(|(i, face)| {
-                        let other_idx = {
-                            if double {
-                                (i + 2) % 4
-                            } else {
-                                if prime {
-                                    (i - 1) % 4
-                                } else {
-                                    (i + 1) % 4
-                                }
-                            }
-                        };
+                let updated = Cube::looped_update(to_update, update_sections);
 
-                        face.update_triplet(
-                            update_sections[i],
-                            to_update[other_idx].get_triplet(update_sections[other_idx]),
-                        )
-                    })
-                    .collect();
+                Cube {
+                    green: self.green.rotate(prime, double),
+                    red: updated[3],
+                    blue: self.blue.clone(),
+                    orange: updated[1],
+                    white: updated[0],
+                    yellow: updated[2],
+                }
+            },
+            Turn::B { prime, double } => {
+                let to_update = [self.white, self.orange, self.yellow, self.red];
+                let update_sections =
+                    [Triplet::Top, Triplet::Left, Triplet::Bottom, Triplet::Right];
+                let updated = Cube::looped_update(to_update, update_sections);
+
+                Cube {
+                    green: self.green.clone(),
+                    red: updated[3],
+                    blue: self.blue.rotate(prime, double),
+                    orange: updated[1],
+                    white: updated[0],
+                    yellow: updated[2],
+                }
             },
         }
     }
