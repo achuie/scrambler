@@ -2,8 +2,9 @@ use colored::*;
 
 fn main() {
     let cube = Cube::new();
-    let moved = cube.mv(Turn::U { prime: false, double: false });
-    moved.print();
+    cube.mv(Turn::U { prime: false, double: false })
+        .mv(Turn::B { prime: false, double: false })
+        .print();
 }
 
 struct Cube {
@@ -99,16 +100,16 @@ impl Cube {
                 }
             },
             Turn::D { prime, double } => {
-                let to_update = [&self.green, &self.red, &self.blue, &self.orange];
+                let to_update = [&self.green, &self.orange, &self.blue, &self.red];
                 let update_sections =
                     [Triplet::Bottom, Triplet::Bottom, Triplet::Bottom, Triplet::Bottom];
                 let updated = Cube::looped_update(to_update, update_sections, prime, double);
 
                 Cube {
                     green: updated[0].clone(),
-                    red: updated[1].clone(),
+                    red: updated[3].clone(),
                     blue: updated[2].clone(),
-                    orange: updated[3].clone(),
+                    orange: updated[1].clone(),
                     white: self.white.clone(),
                     yellow: self.yellow.rotate(prime, double),
                 }
@@ -129,7 +130,7 @@ impl Cube {
                 }
             },
             Turn::L { prime, double } => {
-                let to_update = [&self.green, &self.yellow, &self.blue, &self.white];
+                let to_update = [&self.green, &self.white, &self.blue, &self.yellow];
                 let update_sections = [Triplet::Left, Triplet::Left, Triplet::Right, Triplet::Left];
                 let updated = Cube::looped_update(to_update, update_sections, prime, double);
 
@@ -138,8 +139,8 @@ impl Cube {
                     red: self.red.clone(),
                     blue: updated[2].clone(),
                     orange: self.orange.rotate(prime, double),
-                    white: updated[3].clone(),
-                    yellow: updated[1].clone(),
+                    white: updated[1].clone(),
+                    yellow: updated[3].clone(),
                 }
             },
             Turn::F { prime, double } => {
@@ -158,16 +159,16 @@ impl Cube {
                 }
             },
             Turn::B { prime, double } => {
-                let to_update = [&self.white, &self.orange, &self.yellow, &self.red];
+                let to_update = [&self.white, &self.red, &self.yellow, &self.orange];
                 let update_sections =
-                    [Triplet::Top, Triplet::Left, Triplet::Bottom, Triplet::Right];
+                    [Triplet::Top, Triplet::Right, Triplet::Bottom, Triplet::Left];
                 let updated = Cube::looped_update(to_update, update_sections, prime, double);
 
                 Cube {
                     green: self.green.clone(),
-                    red: updated[3].clone(),
+                    red: updated[1].clone(),
                     blue: self.blue.rotate(prime, double),
-                    orange: updated[1].clone(),
+                    orange: updated[3].clone(),
                     white: updated[0].clone(),
                     yellow: updated[2].clone(),
                 }
@@ -200,7 +201,7 @@ impl Face {
             tiles: {
                 match section {
                     Triplet::Top => {
-                        vec![cubies.to_vec(), self.tiles[1].clone(), self.tiles[2].clone()]
+                        vec!(cubies.to_vec(), self.tiles[1].clone(), self.tiles[2].clone())
                     },
                     Triplet::Right => {
                         let mut tile_array = self.tiles.clone();
@@ -211,7 +212,7 @@ impl Face {
                         tile_array
                     },
                     Triplet::Bottom => {
-                        vec![self.tiles[0].clone(), self.tiles[1].clone(), cubies.to_vec()]
+                        vec!(self.tiles[0].clone(), self.tiles[1].clone(), cubies.to_vec())
                     },
                     Triplet::Left => {
                         let mut tile_array = self.tiles.clone();
