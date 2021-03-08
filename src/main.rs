@@ -11,21 +11,21 @@ fn main() {
 
     //for t in turns {
     //    print!(" {}", t);
-    //    cube = cube.mv(&t);
+    //    cube = cube.mv(t);
     //}
     //println!();
     //cube.print()
-    //cube.mv(&Turn::U(TurnType::Clock)).mv(&Turn::F(TurnType::Prime)).print()
-    cube.mv(&Turn::U(TurnType::Prime))
-        .mv(&Turn::L(TurnType::Clock))
-        .mv(&Turn::D(TurnType::Double))
-        .mv(&Turn::U(TurnType::Double))
-        .mv(&Turn::U(TurnType::Prime))
-        .mv(&Turn::R(TurnType::Clock))
-        .mv(&Turn::F(TurnType::Prime))
-        .mv(&Turn::R(TurnType::Clock))
-        .mv(&Turn::B(TurnType::Prime))
-        .mv(&Turn::U(TurnType::Double))
+    //cube.mv(Turn::U(TurnType::Clock)).mv(Turn::F(TurnType::Prime)).print()
+    cube.mv(Turn::U(TurnType::Prime))
+        .mv(Turn::L(TurnType::Clock))
+        .mv(Turn::D(TurnType::Double))
+        .mv(Turn::U(TurnType::Double))
+        .mv(Turn::U(TurnType::Prime))
+        .mv(Turn::R(TurnType::Clock))
+        .mv(Turn::F(TurnType::Prime))
+        .mv(Turn::R(TurnType::Clock))
+        .mv(Turn::B(TurnType::Prime))
+        .mv(Turn::U(TurnType::Double))
         .print()
 }
 
@@ -34,6 +34,7 @@ fn generate_random_turns(n_turns: u32) -> Vec<Turn> {
 }
 
 struct Cube {
+    moves: Vec<Turn>,
     green: Face,
     red: Face,
     blue: Face,
@@ -45,6 +46,7 @@ struct Cube {
 impl Cube {
     fn new() -> Self {
         Cube {
+            moves: vec![],
             green: Face::new(Color::Green),
             red: Face::new(Color::Red),
             blue: Face::new(Color::Blue),
@@ -56,6 +58,10 @@ impl Cube {
 
     fn print(&self) {
         println!();
+        for t in &self.moves {
+            print!(" {}", t);
+        }
+        print!("\n\n");
         for row in &self.white.tiles {
             print!("        ");
             for t in row {
@@ -100,14 +106,13 @@ impl Cube {
                 face.update_triplet(
                     &update_sections[i],
                     &update_sections[other_idx],
-                    turn_type,
                     to_update[other_idx].get_triplet(&update_sections[other_idx]).as_slice(),
                 )
             })
             .collect()
     }
 
-    fn mv(&self, turn: &Turn) -> Self {
+    fn mv(&self, turn: Turn) -> Self {
         match turn {
             Turn::U(turn_type) => {
                 let to_update = [&self.green, &self.red, &self.blue, &self.orange];
@@ -115,6 +120,12 @@ impl Cube {
                 let updated = Cube::looped_update(to_update, update_sections, &turn_type);
 
                 Cube {
+                    moves: self
+                        .moves
+                        .iter()
+                        .chain(vec![Turn::U(turn_type.clone())].iter())
+                        .map(|t| t.clone())
+                        .collect(),
                     green: updated[0].clone(),
                     red: updated[1].clone(),
                     blue: updated[2].clone(),
@@ -130,6 +141,12 @@ impl Cube {
                 let updated = Cube::looped_update(to_update, update_sections, &turn_type);
 
                 Cube {
+                    moves: self
+                        .moves
+                        .iter()
+                        .chain(vec![Turn::D(turn_type.clone())].iter())
+                        .map(|t| t.clone())
+                        .collect(),
                     green: updated[0].clone(),
                     red: updated[3].clone(),
                     blue: updated[2].clone(),
@@ -145,6 +162,12 @@ impl Cube {
                 let updated = Cube::looped_update(to_update, update_sections, &turn_type);
 
                 Cube {
+                    moves: self
+                        .moves
+                        .iter()
+                        .chain(vec![Turn::R(turn_type.clone())].iter())
+                        .map(|t| t.clone())
+                        .collect(),
                     green: updated[0].clone(),
                     red: self.red.rotate(&turn_type),
                     blue: updated[2].clone(),
@@ -159,6 +182,12 @@ impl Cube {
                 let updated = Cube::looped_update(to_update, update_sections, &turn_type);
 
                 Cube {
+                    moves: self
+                        .moves
+                        .iter()
+                        .chain(vec![Turn::L(turn_type.clone())].iter())
+                        .map(|t| t.clone())
+                        .collect(),
                     green: updated[0].clone(),
                     red: self.red.clone(),
                     blue: updated[2].clone(),
@@ -174,6 +203,12 @@ impl Cube {
                 let updated = Cube::looped_update(to_update, update_sections, &turn_type);
 
                 Cube {
+                    moves: self
+                        .moves
+                        .iter()
+                        .chain(vec![Turn::F(turn_type.clone())].iter())
+                        .map(|t| t.clone())
+                        .collect(),
                     green: self.green.rotate(&turn_type),
                     red: updated[3].clone(),
                     blue: self.blue.clone(),
@@ -189,6 +224,12 @@ impl Cube {
                 let updated = Cube::looped_update(to_update, update_sections, &turn_type);
 
                 Cube {
+                    moves: self
+                        .moves
+                        .iter()
+                        .chain(vec![Turn::B(turn_type.clone())].iter())
+                        .map(|t| t.clone())
+                        .collect(),
                     green: self.green.clone(),
                     red: updated[1].clone(),
                     blue: self.blue.rotate(&turn_type),
@@ -220,13 +261,7 @@ impl Face {
         }
     }
 
-    fn update_triplet(
-        &self,
-        section: &Triplet,
-        other_section: &Triplet,
-        turn_type: &TurnType,
-        cubies: &[Color],
-    ) -> Face {
+    fn update_triplet(&self, section: &Triplet, other_section: &Triplet, cubies: &[Color]) -> Face {
         let reverse = match section {
             Triplet::Top => {
                 discriminant(other_section) == discriminant(&Triplet::Left)
@@ -247,7 +282,7 @@ impl Face {
         };
 
         let prepared_cubies: Vec<Color> = if reverse {
-            cubies.iter().rev().map(|c| c.clone()).collect()
+            cubies.into_iter().rev().map(|c| c.clone()).collect()
         } else {
             cubies.to_vec()
         };
@@ -356,6 +391,7 @@ impl std::fmt::Display for Color {
     }
 }
 
+#[derive(Clone)]
 enum Turn {
     U(TurnType),
     D(TurnType),
@@ -398,6 +434,7 @@ impl std::fmt::Display for Turn {
     }
 }
 
+#[derive(Clone)]
 enum TurnType {
     Clock,
     Prime,
