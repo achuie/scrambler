@@ -74,8 +74,9 @@ impl Cube {
             for t in row {
                 print!("{}", t);
             }
-            print!("\n");
+            println!();
         }
+        println!();
         for row in 0..3 {
             print!(" ");
             for &face in [&self.orange, &self.green, &self.red, &self.blue].iter() {
@@ -84,14 +85,15 @@ impl Cube {
                 }
                 print!(" ");
             }
-            print!("\n");
+            println!();
         }
+        println!();
         for row in &self.yellow.tiles {
             print!("        ");
             for t in row {
                 print!("{}", t);
             }
-            print!("\n");
+            println!();
         }
     }
 
