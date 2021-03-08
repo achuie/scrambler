@@ -7,30 +7,37 @@ use std::mem::discriminant;
 
 fn main() {
     let mut cube = Cube::new();
-    let turns = generate_random_turns(10);
+    let turns = generate_random_turns(25);
 
-    //for t in turns {
-    //    print!(" {}", t);
-    //    cube = cube.mv(t);
-    //}
-    //println!();
-    //cube.print()
+    for t in turns {
+        cube = cube.mv(t);
+    }
+    cube.print()
     //cube.mv(Turn::U(TurnType::Clock)).mv(Turn::F(TurnType::Prime)).print()
-    cube.mv(Turn::U(TurnType::Prime))
-        .mv(Turn::L(TurnType::Clock))
-        .mv(Turn::D(TurnType::Double))
-        .mv(Turn::U(TurnType::Double))
-        .mv(Turn::U(TurnType::Prime))
-        .mv(Turn::R(TurnType::Clock))
-        .mv(Turn::F(TurnType::Prime))
-        .mv(Turn::R(TurnType::Clock))
-        .mv(Turn::B(TurnType::Prime))
-        .mv(Turn::U(TurnType::Double))
-        .print()
+    //cube.mv(Turn::U(TurnType::Prime))
+    //    .mv(Turn::L(TurnType::Clock))
+    //    .mv(Turn::D(TurnType::Double))
+    //    .mv(Turn::U(TurnType::Double))
+    //    .mv(Turn::U(TurnType::Prime))
+    //    .mv(Turn::R(TurnType::Clock))
+    //    .mv(Turn::F(TurnType::Prime))
+    //    .mv(Turn::R(TurnType::Clock))
+    //    .mv(Turn::B(TurnType::Prime))
+    //    .mv(Turn::U(TurnType::Double))
+    //    .print()
 }
 
 fn generate_random_turns(n_turns: u32) -> Vec<Turn> {
-    (0..n_turns).map(|_| rand::random()).collect()
+    let mut prev: Turn = rand::random();
+    (0..n_turns).map(|_| {
+        let mut t: Turn = rand::random();
+        while discriminant(&t) == discriminant(&prev) {
+            t = rand::random();
+        }
+        prev = t.clone();
+
+        t
+    }).collect()
 }
 
 struct Cube {
