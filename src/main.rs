@@ -3,10 +3,30 @@ use rand::{
     distributions::{Distribution, Standard},
     Rng,
 };
+use std::mem::discriminant;
 
 fn main() {
-    let cube = Cube::new();
-    cube.mv(Turn::U(TurnType::Clock)).mv(Turn::B(TurnType::Double)).print();
+    let mut cube = Cube::new();
+    let turns = generate_random_turns(10);
+
+    //for t in turns {
+    //    print!(" {}", t);
+    //    cube = cube.mv(&t);
+    //}
+    //println!();
+    //cube.print()
+    //cube.mv(&Turn::U(TurnType::Clock)).mv(&Turn::F(TurnType::Prime)).print()
+    cube.mv(&Turn::U(TurnType::Prime))
+        .mv(&Turn::L(TurnType::Clock))
+        .mv(&Turn::D(TurnType::Double))
+        .mv(&Turn::U(TurnType::Double))
+        .mv(&Turn::U(TurnType::Prime))
+        .mv(&Turn::R(TurnType::Clock))
+        .mv(&Turn::F(TurnType::Prime))
+        .mv(&Turn::R(TurnType::Clock))
+        .mv(&Turn::B(TurnType::Prime))
+        .mv(&Turn::U(TurnType::Double))
+        .print()
 }
 
 fn generate_random_turns(n_turns: u32) -> Vec<Turn> {
@@ -35,6 +55,7 @@ impl Cube {
     }
 
     fn print(&self) {
+        println!();
         for row in &self.white.tiles {
             print!("        ");
             for t in row {
@@ -72,28 +93,21 @@ impl Cube {
             .map(|(i, &face)| {
                 let other_idx = match turn_type {
                     TurnType::Clock => (i + 1) % 4,
-                    TurnType::Prime => (i - 1) % 4,
+                    TurnType::Prime => ((((i as isize - 1) % 4) + 4) % 4) as usize,
                     TurnType::Double => (i + 2) % 4,
                 };
 
                 face.update_triplet(
                     &update_sections[i],
-                    match turn_type {
-                        TurnType::Double => to_update[other_idx]
-                            .get_triplet(&update_sections[other_idx])
-                            .iter()
-                            .rev()
-                            .map(|c| c.clone())
-                            .collect::<Vec<Color>>(),
-                        _ => to_update[other_idx].get_triplet(&update_sections[other_idx]),
-                    }
-                    .as_slice(),
+                    &update_sections[other_idx],
+                    turn_type,
+                    to_update[other_idx].get_triplet(&update_sections[other_idx]).as_slice(),
                 )
             })
             .collect()
     }
 
-    fn mv(&self, turn: Turn) -> Self {
+    fn mv(&self, turn: &Turn) -> Self {
         match turn {
             Turn::U(turn_type) => {
                 let to_update = [&self.green, &self.red, &self.blue, &self.orange];
@@ -206,28 +220,59 @@ impl Face {
         }
     }
 
-    fn update_triplet(&self, section: &Triplet, cubies: &[Color]) -> Face {
+    fn update_triplet(
+        &self,
+        section: &Triplet,
+        other_section: &Triplet,
+        turn_type: &TurnType,
+        cubies: &[Color],
+    ) -> Face {
+        let reverse = match section {
+            Triplet::Top => {
+                discriminant(other_section) == discriminant(&Triplet::Left)
+                    || discriminant(other_section) == discriminant(&Triplet::Bottom)
+            },
+            Triplet::Right => {
+                discriminant(other_section) == discriminant(&Triplet::Left)
+                    || discriminant(other_section) == discriminant(&Triplet::Bottom)
+            },
+            Triplet::Bottom => {
+                discriminant(other_section) == discriminant(&Triplet::Right)
+                    || discriminant(other_section) == discriminant(&Triplet::Top)
+            },
+            Triplet::Left => {
+                discriminant(other_section) == discriminant(&Triplet::Right)
+                    || discriminant(other_section) == discriminant(&Triplet::Top)
+            },
+        };
+
+        let prepared_cubies: Vec<Color> = if reverse {
+            cubies.iter().rev().map(|c| c.clone()).collect()
+        } else {
+            cubies.to_vec()
+        };
+
         Face {
             tiles: {
                 match section {
                     Triplet::Top => {
-                        vec![cubies.to_vec(), self.tiles[1].clone(), self.tiles[2].clone()]
+                        vec![prepared_cubies, self.tiles[1].clone(), self.tiles[2].clone()]
                     },
                     Triplet::Right => {
                         let mut tile_array = self.tiles.clone();
                         for i in 0..3 {
-                            tile_array[i][2] = cubies[i].clone();
+                            tile_array[i][2] = prepared_cubies[i].clone();
                         }
 
                         tile_array
                     },
                     Triplet::Bottom => {
-                        vec![self.tiles[0].clone(), self.tiles[1].clone(), cubies.to_vec()]
+                        vec![self.tiles[0].clone(), self.tiles[1].clone(), prepared_cubies]
                     },
                     Triplet::Left => {
                         let mut tile_array = self.tiles.clone();
                         for i in 0..3 {
-                            tile_array[i][0] = cubies[i].clone();
+                            tile_array[i][0] = prepared_cubies[i].clone();
                         }
 
                         tile_array
@@ -340,8 +385,31 @@ impl Distribution<Turn> for Standard {
     }
 }
 
+impl std::fmt::Display for Turn {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Turn::U(tt) => write!(f, "U{}", tt),
+            Turn::D(tt) => write!(f, "D{}", tt),
+            Turn::R(tt) => write!(f, "R{}", tt),
+            Turn::L(tt) => write!(f, "L{}", tt),
+            Turn::F(tt) => write!(f, "F{}", tt),
+            Turn::B(tt) => write!(f, "B{}", tt),
+        }
+    }
+}
+
 enum TurnType {
     Clock,
     Prime,
     Double,
+}
+
+impl std::fmt::Display for TurnType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            TurnType::Clock => write!(f, ""),
+            TurnType::Prime => write!(f, "\'"),
+            TurnType::Double => write!(f, "2"),
+        }
+    }
 }
