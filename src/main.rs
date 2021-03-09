@@ -13,18 +13,6 @@ fn main() {
         cube = cube.mv(t);
     }
     cube.print()
-    //cube.mv(Turn::U(TurnType::Clock)).mv(Turn::F(TurnType::Prime)).print()
-    //cube.mv(Turn::U(TurnType::Prime))
-    //    .mv(Turn::L(TurnType::Clock))
-    //    .mv(Turn::D(TurnType::Double))
-    //    .mv(Turn::U(TurnType::Double))
-    //    .mv(Turn::U(TurnType::Prime))
-    //    .mv(Turn::R(TurnType::Clock))
-    //    .mv(Turn::F(TurnType::Prime))
-    //    .mv(Turn::R(TurnType::Clock))
-    //    .mv(Turn::B(TurnType::Prime))
-    //    .mv(Turn::U(TurnType::Double))
-    //    .print()
 }
 
 fn generate_random_turns(n_turns: u32) -> Vec<Turn> {
@@ -390,12 +378,12 @@ enum Color {
 impl std::fmt::Display for Color {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Color::Green => write!(f, "{}", "\u{2588}\u{2588}".green()),
-            Color::Red => write!(f, "{}", "\u{2588}\u{2588}".red()),
-            Color::Blue => write!(f, "{}", "\u{2588}\u{2588}".blue()),
-            Color::Orange => write!(f, "{}", "\u{2588}\u{2588}".truecolor(255, 102, 0)),
-            Color::White => write!(f, "{}", "\u{2588}\u{2588}".bright_white()),
-            Color::Yellow => write!(f, "{}", "\u{2588}\u{2588}".yellow()),
+            Color::Green => write!(f, "{}", "\u{2588}\u{2589}".green()),
+            Color::Red => write!(f, "{}", "\u{2588}\u{2589}".red()),
+            Color::Blue => write!(f, "{}", "\u{2588}\u{2589}".blue()),
+            Color::Orange => write!(f, "{}", "\u{2588}\u{2589}".truecolor(255, 102, 0)),
+            Color::White => write!(f, "{}", "\u{2588}\u{2589}".bright_white()),
+            Color::Yellow => write!(f, "{}", "\u{2588}\u{2589}".bright_yellow()),
         }
     }
 }
