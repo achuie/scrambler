@@ -5,6 +5,7 @@ description = "Scramble generator for Rubik's cubes"
 edition = "2018"
 
 [dependencies]
+clap = "2.33.3"
 colored = "2.0.0"
 rand = "0.8.3"
 
