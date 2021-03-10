@@ -1,64 +1,8 @@
-use clap::{crate_version, App, Arg};
+use crate::turn::{Turn, TurnType};
 use colored::Colorize;
-use rand::{
-    distributions::{Distribution, Standard},
-    Rng,
-};
 use std::mem::discriminant;
 
-fn main() {
-    let matches = App::new("scrambler")
-        .about("Scramble Generator for Rubik's Cube")
-        .version(crate_version!())
-        .arg(
-            Arg::with_name("ALGORITHM")
-                .help("Method used to generate scramble")
-                .index(1)
-                .possible_values(&["rand", "ida"])
-                .required(true),
-        )
-        .arg(
-            Arg::with_name("num_moves")
-                .short("n")
-                .value_name("NATURAL")
-                .default_value("25")
-                .help("Number of random moves to generate"),
-        )
-        .get_matches();
-
-    let num_turns: u32 = {
-        let num_str = matches.value_of("num_moves").unwrap();
-
-        num_str
-            .parse()
-            .unwrap_or_else(|_| panic!("*** Malformed number of moves '{}' ***", num_str))
-    };
-
-    let mut cube = Cube::new();
-    let turns = generate_random_turns(num_turns);
-
-    for t in turns {
-        cube = cube.mv(t);
-    }
-    cube.print()
-}
-
-fn generate_random_turns(n_turns: u32) -> Vec<Turn> {
-    let mut prev: Turn = rand::random();
-    (0..n_turns)
-        .map(|_| {
-            let mut t: Turn = rand::random();
-            while discriminant(&t) == discriminant(&prev) {
-                t = rand::random();
-            }
-            prev = t.clone();
-
-            t
-        })
-        .collect()
-}
-
-struct Cube {
+pub struct Cube {
     moves: Vec<Turn>,
     green: Face,
     red: Face,
@@ -69,7 +13,7 @@ struct Cube {
 }
 
 impl Cube {
-    fn new() -> Self {
+    pub fn new() -> Self {
         Cube {
             moves: vec![],
             green: Face::new(Color::Green),
@@ -81,7 +25,7 @@ impl Cube {
         }
     }
 
-    fn print(&self) {
+    pub fn print(&self) {
         println!();
         for t in &self.moves {
             print!(" {}", t);
@@ -139,7 +83,7 @@ impl Cube {
             .collect()
     }
 
-    fn mv(&self, turn: Turn) -> Self {
+    pub fn mv(&self, turn: Turn) -> Self {
         match turn {
             Turn::U(turn_type) => {
                 let to_update = [&self.green, &self.red, &self.blue, &self.orange];
@@ -414,66 +358,6 @@ impl std::fmt::Display for Color {
             Color::Orange => write!(f, "{}", "\u{2588}\u{2589}".truecolor(255, 102, 0)),
             Color::White => write!(f, "{}", "\u{2588}\u{2589}".bright_white()),
             Color::Yellow => write!(f, "{}", "\u{2588}\u{2589}".bright_yellow()),
-        }
-    }
-}
-
-#[derive(Clone)]
-enum Turn {
-    U(TurnType),
-    D(TurnType),
-    R(TurnType),
-    L(TurnType),
-    F(TurnType),
-    B(TurnType),
-}
-
-impl Distribution<Turn> for Standard {
-    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Turn {
-        let r = rng.gen_range(0..18);
-        let turn_type = match r / 6 {
-            0 => TurnType::Clock,
-            1 => TurnType::Prime,
-            _ => TurnType::Double,
-        };
-
-        match r % 6 {
-            0 => Turn::U(turn_type),
-            1 => Turn::D(turn_type),
-            2 => Turn::R(turn_type),
-            3 => Turn::L(turn_type),
-            4 => Turn::F(turn_type),
-            _ => Turn::B(turn_type),
-        }
-    }
-}
-
-impl std::fmt::Display for Turn {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Turn::U(tt) => write!(f, "U{}", tt),
-            Turn::D(tt) => write!(f, "D{}", tt),
-            Turn::R(tt) => write!(f, "R{}", tt),
-            Turn::L(tt) => write!(f, "L{}", tt),
-            Turn::F(tt) => write!(f, "F{}", tt),
-            Turn::B(tt) => write!(f, "B{}", tt),
-        }
-    }
-}
-
-#[derive(Clone)]
-enum TurnType {
-    Clock,
-    Prime,
-    Double,
-}
-
-impl std::fmt::Display for TurnType {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            TurnType::Clock => write!(f, ""),
-            TurnType::Prime => write!(f, "\'"),
-            TurnType::Double => write!(f, "2"),
         }
     }
 }

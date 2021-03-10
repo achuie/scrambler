@@ -4,6 +4,10 @@ version = "0.1.0-alpha"
 description = "Scramble generator for Rubik's cubes"
 edition = "2018"
 
+[[bin]]
+name = "scrambler"
+path = "src/scrambler.rs"
+
 [dependencies]
 clap = "2.33.3"
 colored = "2.0.0"
