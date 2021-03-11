@@ -357,7 +357,7 @@ impl std::fmt::Display for Color {
             Color::Blue => write!(f, "{}", "\u{2588}\u{2589}".blue()),
             Color::Orange => write!(f, "{}", "\u{2588}\u{2589}".truecolor(255, 102, 0)),
             Color::White => write!(f, "{}", "\u{2588}\u{2589}".bright_white()),
-            Color::Yellow => write!(f, "{}", "\u{2588}\u{2589}".bright_yellow()),
+            Color::Yellow => write!(f, "{}", "\u{2588}\u{2589}".yellow()),
         }
     }
 }
