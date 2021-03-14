@@ -63,7 +63,7 @@ impl Cube {
         to_update: [&Face; 4],
         update_sections: [Triplet; 4],
         turn_type: &TurnType,
-    ) -> Vec<Face> {
+    ) -> Vec<Option<Face>> {
         to_update
             .iter()
             .enumerate()
@@ -74,11 +74,11 @@ impl Cube {
                     TurnType::Double => (i + 2) % 4,
                 };
 
-                face.update_triplet(
+                Some(face.update_triplet(
                     &update_sections[i],
                     &update_sections[other_idx],
                     to_update[other_idx].get_triplet(&update_sections[other_idx]).as_slice(),
-                )
+                ))
             })
             .collect()
     }
@@ -88,7 +88,7 @@ impl Cube {
             Turn::U(turn_type) => {
                 let to_update = [&self.green, &self.red, &self.blue, &self.orange];
                 let update_sections = [Triplet::Top, Triplet::Top, Triplet::Top, Triplet::Top];
-                let updated = Cube::looped_update(to_update, update_sections, &turn_type);
+                let mut updated = Cube::looped_update(to_update, update_sections, &turn_type);
 
                 Cube {
                     moves: self
@@ -97,10 +97,10 @@ impl Cube {
                         .chain(vec![Turn::U(turn_type.clone())].iter())
                         .map(|t| t.clone())
                         .collect(),
-                    green: updated[0].clone(),
-                    red: updated[1].clone(),
-                    blue: updated[2].clone(),
-                    orange: updated[3].clone(),
+                    green: updated[0].take().unwrap(),
+                    red: updated[1].take().unwrap(),
+                    blue: updated[2].take().unwrap(),
+                    orange: updated[3].take().unwrap(),
                     white: self.white.rotate(&turn_type),
                     yellow: self.yellow.clone(),
                 }
@@ -109,7 +109,7 @@ impl Cube {
                 let to_update = [&self.green, &self.orange, &self.blue, &self.red];
                 let update_sections =
                     [Triplet::Bottom, Triplet::Bottom, Triplet::Bottom, Triplet::Bottom];
-                let updated = Cube::looped_update(to_update, update_sections, &turn_type);
+                let mut updated = Cube::looped_update(to_update, update_sections, &turn_type);
 
                 Cube {
                     moves: self
@@ -118,10 +118,10 @@ impl Cube {
                         .chain(vec![Turn::D(turn_type.clone())].iter())
                         .map(|t| t.clone())
                         .collect(),
-                    green: updated[0].clone(),
-                    red: updated[3].clone(),
-                    blue: updated[2].clone(),
-                    orange: updated[1].clone(),
+                    green: updated[0].take().unwrap(),
+                    red: updated[3].take().unwrap(),
+                    blue: updated[2].take().unwrap(),
+                    orange: updated[1].take().unwrap(),
                     white: self.white.clone(),
                     yellow: self.yellow.rotate(&turn_type),
                 }
@@ -130,7 +130,7 @@ impl Cube {
                 let to_update = [&self.green, &self.yellow, &self.blue, &self.white];
                 let update_sections =
                     [Triplet::Right, Triplet::Right, Triplet::Left, Triplet::Right];
-                let updated = Cube::looped_update(to_update, update_sections, &turn_type);
+                let mut updated = Cube::looped_update(to_update, update_sections, &turn_type);
 
                 Cube {
                     moves: self
@@ -139,18 +139,18 @@ impl Cube {
                         .chain(vec![Turn::R(turn_type.clone())].iter())
                         .map(|t| t.clone())
                         .collect(),
-                    green: updated[0].clone(),
+                    green: updated[0].take().unwrap(),
                     red: self.red.rotate(&turn_type),
-                    blue: updated[2].clone(),
+                    blue: updated[2].take().unwrap(),
                     orange: self.orange.clone(),
-                    white: updated[3].clone(),
-                    yellow: updated[1].clone(),
+                    white: updated[3].take().unwrap(),
+                    yellow: updated[1].take().unwrap(),
                 }
             },
             Turn::L(turn_type) => {
                 let to_update = [&self.green, &self.white, &self.blue, &self.yellow];
                 let update_sections = [Triplet::Left, Triplet::Left, Triplet::Right, Triplet::Left];
-                let updated = Cube::looped_update(to_update, update_sections, &turn_type);
+                let mut updated = Cube::looped_update(to_update, update_sections, &turn_type);
 
                 Cube {
                     moves: self
@@ -159,19 +159,19 @@ impl Cube {
                         .chain(vec![Turn::L(turn_type.clone())].iter())
                         .map(|t| t.clone())
                         .collect(),
-                    green: updated[0].clone(),
+                    green: updated[0].take().unwrap(),
                     red: self.red.clone(),
-                    blue: updated[2].clone(),
+                    blue: updated[2].take().unwrap(),
                     orange: self.orange.rotate(&turn_type),
-                    white: updated[1].clone(),
-                    yellow: updated[3].clone(),
+                    white: updated[1].take().unwrap(),
+                    yellow: updated[3].take().unwrap(),
                 }
             },
             Turn::F(turn_type) => {
                 let to_update = [&self.white, &self.orange, &self.yellow, &self.red];
                 let update_sections =
                     [Triplet::Bottom, Triplet::Right, Triplet::Top, Triplet::Left];
-                let updated = Cube::looped_update(to_update, update_sections, &turn_type);
+                let mut updated = Cube::looped_update(to_update, update_sections, &turn_type);
 
                 Cube {
                     moves: self
@@ -181,18 +181,18 @@ impl Cube {
                         .map(|t| t.clone())
                         .collect(),
                     green: self.green.rotate(&turn_type),
-                    red: updated[3].clone(),
+                    red: updated[3].take().unwrap(),
                     blue: self.blue.clone(),
-                    orange: updated[1].clone(),
-                    white: updated[0].clone(),
-                    yellow: updated[2].clone(),
+                    orange: updated[1].take().unwrap(),
+                    white: updated[0].take().unwrap(),
+                    yellow: updated[2].take().unwrap(),
                 }
             },
             Turn::B(turn_type) => {
                 let to_update = [&self.white, &self.red, &self.yellow, &self.orange];
                 let update_sections =
                     [Triplet::Top, Triplet::Right, Triplet::Bottom, Triplet::Left];
-                let updated = Cube::looped_update(to_update, update_sections, &turn_type);
+                let mut updated = Cube::looped_update(to_update, update_sections, &turn_type);
 
                 Cube {
                     moves: self
@@ -202,11 +202,11 @@ impl Cube {
                         .map(|t| t.clone())
                         .collect(),
                     green: self.green.clone(),
-                    red: updated[1].clone(),
+                    red: updated[1].take().unwrap(),
                     blue: self.blue.rotate(&turn_type),
-                    orange: updated[3].clone(),
-                    white: updated[0].clone(),
-                    yellow: updated[2].clone(),
+                    orange: updated[3].take().unwrap(),
+                    white: updated[0].take().unwrap(),
+                    yellow: updated[2].take().unwrap(),
                 }
             },
         }
@@ -220,7 +220,7 @@ struct Face {
 
 impl Face {
     fn new(color: Color) -> Self {
-        Face { tiles: vec![vec!(color; 3); 3] }
+        Face { tiles: vec![vec![color; 3]; 3] }
     }
 
     fn get_triplet(&self, section: &Triplet) -> Vec<Color> {
@@ -291,7 +291,7 @@ impl Face {
     fn rotate(&self, turn_type: &TurnType) -> Face {
         Face {
             tiles: {
-                let mut tile_array = vec![vec!(self.tiles[1][1].clone(); 3); 3];
+                let mut tile_array = vec![vec![self.tiles[1][1].clone(); 3]; 3];
                 match turn_type {
                     TurnType::Clock => {
                         // 00 01 02    20 10 00
