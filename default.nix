@@ -11,7 +11,7 @@ let
     ];
   };
   naersk = pkgs.callPackage (builtins.fetchGit {
-    name = "HEAD";
+    name = "master";
     url = "https://github.com/nix-community/naersk";
     ref = "HEAD";
     rev = "df71f5e4babda41cd919a8684b72218e2e809fa9";
