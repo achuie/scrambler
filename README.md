@@ -10,7 +10,7 @@ Initialize `Cargo.lock`:
 ```sh
 $ nix-shell --command 'cargo update'
 ```
-or the convenience script `generate_lockfile.sh`.
+or use the convenience script `generate_lockfile.sh`.
 
 Install:
 ```sh
