@@ -352,12 +352,12 @@ enum Color {
 impl std::fmt::Display for Color {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Color::Green => write!(f, "{}", "\u{2588}\u{2589}".green()),
-            Color::Red => write!(f, "{}", "\u{2588}\u{2589}".red()),
-            Color::Blue => write!(f, "{}", "\u{2588}\u{2589}".blue()),
+            Color::Green => write!(f, "{}", "\u{2588}\u{2589}".truecolor(38, 203, 51)),
+            Color::Red => write!(f, "{}", "\u{2588}\u{2589}".truecolor(178, 36, 36)),
+            Color::Blue => write!(f, "{}", "\u{2588}\u{2589}".truecolor(32, 80, 173)),
             Color::Orange => write!(f, "{}", "\u{2588}\u{2589}".truecolor(255, 102, 0)),
-            Color::White => write!(f, "{}", "\u{2588}\u{2589}".bright_white()),
-            Color::Yellow => write!(f, "{}", "\u{2588}\u{2589}".yellow()),
+            Color::White => write!(f, "{}", "\u{2588}\u{2589}".truecolor(239, 239, 239)),
+            Color::Yellow => write!(f, "{}", "\u{2588}\u{2589}".truecolor(255, 251, 0)),
         }
     }
 }
