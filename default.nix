@@ -1,9 +1,13 @@
-let
-  pkgs = import ./rust_toolchain.nix;
-  naersk = pkgs.callPackage (builtins.fetchGit {
-    name = "master";
-    url = "https://github.com/nix-community/naersk";
-    ref = "HEAD";
-    rev = "df71f5e4babda41cd919a8684b72218e2e809fa9";
-  }) {};
-in naersk.buildPackage ./.
+(import
+  (
+    let
+      lock = builtins.fromJSON (builtins.readFile ./flake.lock);
+    in
+    fetchTarball {
+      url = "https://github.com/edolstra/flake-compat/archive/${lock.nodes.flake-compat.locked.rev}.tar.gz";
+      sha256 = lock.nodes.flake-compat.locked.narHash;
+    }
+  )
+  {
+    src = ./.;
+  }).defaultNix
