@@ -4,7 +4,15 @@ A scramble generator for 3x3 Rubik's Cubes.
 
 ## Install
 
-### With Nix
+## With Nix Flakes
+
+Register the flake in your local flake registry, then install it:
+```sh
+$ nix registry add scrambler github:achuie/scrambler
+$ nix profile install scrambler
+```
+
+### With Legacy Nix
 
 Initialize `Cargo.lock`:
 ```sh
