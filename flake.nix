@@ -1,29 +1,43 @@
 {
   description = "Rubik's Cube scrambler";
 
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    fenix = {
+      url = "github:nix-community/fenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
 
-  outputs = { self, nixpkgs }:
+  outputs = { self, nixpkgs, fenix }:
     let
-      supportedSystems = [ "x86_64-linux" "x86_64-darwin" "aarch64-linux" "aarch64-darwin" ];
-      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-      nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
+      forAllSystems = f: nixpkgs.lib.genAttrs [ "x86_64-linux" ] (system:
+        f { pkgs = nixpkgs.legacyPackages.${system}; fenix-pkgs = fenix.packages.${system}; }
+      );
     in
     {
-      packages = forAllSystems (system:
+      packages = forAllSystems (pset: with pset;
         let
-          pkgs = nixpkgsFor.${system};
-          src = pkgs.lib.sourceByRegex self [ "src(/.*)?" "Cargo\\.(toml|lock)" ];
+          src = nixpkgs.lib.sourceByRegex self [ "src(/.*)?" "Cargo\\.(toml|lock)" ];
+          toolchain = fenix-pkgs.fromToolchainFile {
+            file = ./rust-toolchain.toml;
+            # Generate by `nix build`ing with `nixpkbs.lib.fakeSha256.
+            sha256 = "sha256-Q9UgzzvxLi4x9aWUJTn+/5EXekC98ODRU1TwhUs9RnY=";
+          };
         in
         {
-          default = pkgs.rustPlatform.buildRustPackage {
+          default = (pkgs.makeRustPlatform {
+            cargo = toolchain;
+            rustc = toolchain;
+          }).buildRustPackage {
             pname = "scrambler";
-            inherit ((pkgs.lib.importTOML "${src}/Cargo.toml").package) version;
+            inherit ((nixpkgs.lib.importTOML "${src}/Cargo.toml").package) version;
 
             inherit src;
-            cargoLock = { lockFile = "${src}/Cargo.lock"; };
+            cargoLock.lockFile = "${src}/Cargo.lock";
           };
         });
-      formatter = forAllSystems (system: nixpkgsFor.${system}.nixpkgs-fmt);
+
+      formatter = forAllSystems (pset: pset.pkgs.nixpkgs-fmt);
     };
 }
