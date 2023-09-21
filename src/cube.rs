@@ -339,7 +339,7 @@ enum Triplet {
     Left,
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 enum Color {
     Green,
     Red,
@@ -359,5 +359,50 @@ impl std::fmt::Display for Color {
             Color::White => write!(f, "{}", "\u{2588}\u{2589}".truecolor(239, 239, 239)),
             Color::Yellow => write!(f, "{}", "\u{2588}\u{2589}".truecolor(255, 251, 0)),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn turn_top() {
+        let cube = Cube::new().mv(Turn::U(TurnType::Clock));
+
+        let expected: Vec<Color> = vec![
+            // Green
+            vec![Color::Red; 3],
+            vec![Color::Green; 6],
+            // Red
+            vec![Color::Blue; 3],
+            vec![Color::Red; 6],
+            // Blue
+            vec![Color::Orange; 3],
+            vec![Color::Blue; 6],
+            // Orange
+            vec![Color::Green; 3],
+            vec![Color::Orange; 6],
+            // White
+            vec![Color::White; 9],
+            // Yellow
+            vec![Color::Yellow; 9],
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+        let cube_tiles: Vec<Color> = vec![
+            cube.green.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.red.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.blue.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.orange.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.white.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.yellow.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+
+        assert!(expected.iter().zip(cube_tiles.iter()).all(|(a, b)| a == b));
     }
 }

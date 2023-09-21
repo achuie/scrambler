@@ -57,6 +57,6 @@ hide_parse_errors = false
 color = "Auto"
 unstable_features = true # false
 ignore = []
-edition = "2018"
+edition = "2021"
 version = "One"
 normalize_doc_attributes = false
