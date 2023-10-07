@@ -41,14 +41,20 @@
 
       devShells = forAllSystems (pset: with pset;
         let
-          dev-toolchain = with fenix-pkgs; combine [
-            toolchain
-            default.rustfmt
-            default.clippy
-          ];
+          fullBuildToolchain = fenix-pkgs.toolchainOf {
+            channel = (nixpkgs.lib.importTOML ./rust-toolchain.toml).toolchain.channel;
+            sha256 = "sha256-Q9UgzzvxLi4x9aWUJTn+/5EXekC98ODRU1TwhUs9RnY=";
+          };
         in
         {
-          default = pkgs.mkShell { packages = [ dev-toolchain ]; };
+          default = pkgs.mkShell {
+            packages = with fullBuildToolchain; [
+              cargo
+              rustc
+              clippy
+              fenix-pkgs.default.rustfmt
+            ];
+          };
         });
 
       formatter = forAllSystems (pset: pset.pkgs.nixpkgs-fmt);
