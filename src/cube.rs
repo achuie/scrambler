@@ -405,4 +405,720 @@ mod tests {
 
         assert!(expected.iter().zip(cube_tiles.iter()).all(|(a, b)| a == b));
     }
+
+    #[test]
+    fn turn_top_prime() {
+        let cube = Cube::new().mv(Turn::U(TurnType::Prime));
+
+        let expected: Vec<Color> = vec![
+            // Green
+            vec![Color::Orange; 3],
+            vec![Color::Green; 6],
+            // Red
+            vec![Color::Green; 3],
+            vec![Color::Red; 6],
+            // Blue
+            vec![Color::Red; 3],
+            vec![Color::Blue; 6],
+            // Orange
+            vec![Color::Blue; 3],
+            vec![Color::Orange; 6],
+            // White
+            vec![Color::White; 9],
+            // Yellow
+            vec![Color::Yellow; 9],
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+        let cube_tiles: Vec<Color> = vec![
+            cube.green.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.red.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.blue.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.orange.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.white.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.yellow.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+
+        assert!(expected.iter().zip(cube_tiles.iter()).all(|(a, b)| a == b));
+    }
+
+    #[test]
+    fn turn_top_double() {
+        let cube = Cube::new().mv(Turn::U(TurnType::Double));
+
+        let expected: Vec<Color> = vec![
+            // Green
+            vec![Color::Blue; 3],
+            vec![Color::Green; 6],
+            // Red
+            vec![Color::Orange; 3],
+            vec![Color::Red; 6],
+            // Blue
+            vec![Color::Green; 3],
+            vec![Color::Blue; 6],
+            // Orange
+            vec![Color::Red; 3],
+            vec![Color::Orange; 6],
+            // White
+            vec![Color::White; 9],
+            // Yellow
+            vec![Color::Yellow; 9],
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+        let cube_tiles: Vec<Color> = vec![
+            cube.green.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.red.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.blue.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.orange.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.white.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.yellow.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+
+        assert!(expected.iter().zip(cube_tiles.iter()).all(|(a, b)| a == b));
+    }
+
+    #[test]
+    fn turn_bottom() {
+        let cube = Cube::new().mv(Turn::D(TurnType::Clock));
+
+        let expected: Vec<Color> = vec![
+            // Green
+            vec![Color::Green; 6],
+            vec![Color::Orange; 3],
+            // Red
+            vec![Color::Red; 6],
+            vec![Color::Green; 3],
+            // Blue
+            vec![Color::Blue; 6],
+            vec![Color::Red; 3],
+            // Orange
+            vec![Color::Orange; 6],
+            vec![Color::Blue; 3],
+            // White
+            vec![Color::White; 9],
+            // Yellow
+            vec![Color::Yellow; 9],
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+        let cube_tiles: Vec<Color> = vec![
+            cube.green.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.red.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.blue.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.orange.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.white.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.yellow.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+
+        assert!(expected.iter().zip(cube_tiles.iter()).all(|(a, b)| a == b));
+    }
+
+    #[test]
+    fn turn_bottom_prime() {
+        let cube = Cube::new().mv(Turn::D(TurnType::Prime));
+
+        let expected: Vec<Color> = vec![
+            // Green
+            vec![Color::Green; 6],
+            vec![Color::Red; 3],
+            // Red
+            vec![Color::Red; 6],
+            vec![Color::Blue; 3],
+            // Blue
+            vec![Color::Blue; 6],
+            vec![Color::Orange; 3],
+            // Orange
+            vec![Color::Orange; 6],
+            vec![Color::Green; 3],
+            // White
+            vec![Color::White; 9],
+            // Yellow
+            vec![Color::Yellow; 9],
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+        let cube_tiles: Vec<Color> = vec![
+            cube.green.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.red.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.blue.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.orange.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.white.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.yellow.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+
+        assert!(expected.iter().zip(cube_tiles.iter()).all(|(a, b)| a == b));
+    }
+
+    #[test]
+    fn turn_bottom_double() {
+        let cube = Cube::new().mv(Turn::D(TurnType::Double));
+
+        let expected: Vec<Color> = vec![
+            // Green
+            vec![Color::Green; 6],
+            vec![Color::Blue; 3],
+            // Red
+            vec![Color::Red; 6],
+            vec![Color::Orange; 3],
+            // Blue
+            vec![Color::Blue; 6],
+            vec![Color::Green; 3],
+            // Orange
+            vec![Color::Orange; 6],
+            vec![Color::Red; 3],
+            // White
+            vec![Color::White; 9],
+            // Yellow
+            vec![Color::Yellow; 9],
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+        let cube_tiles: Vec<Color> = vec![
+            cube.green.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.red.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.blue.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.orange.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.white.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.yellow.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+
+        assert!(expected.iter().zip(cube_tiles.iter()).all(|(a, b)| a == b));
+    }
+
+    #[test]
+    fn turn_right() {
+        let cube = Cube::new().mv(Turn::R(TurnType::Clock));
+
+        let expected: Vec<Color> = vec![
+            // Green
+            vec![Color::Green, Color::Green, Color::Yellow],
+            vec![Color::Green, Color::Green, Color::Yellow],
+            vec![Color::Green, Color::Green, Color::Yellow],
+            // Red
+            vec![Color::Red; 9],
+            // Blue
+            vec![Color::White, Color::Blue, Color::Blue],
+            vec![Color::White, Color::Blue, Color::Blue],
+            vec![Color::White, Color::Blue, Color::Blue],
+            // Orange
+            vec![Color::Orange; 9],
+            // White
+            vec![Color::White, Color::White, Color::Green],
+            vec![Color::White, Color::White, Color::Green],
+            vec![Color::White, Color::White, Color::Green],
+            // Yellow
+            vec![Color::Yellow, Color::Yellow, Color::Blue],
+            vec![Color::Yellow, Color::Yellow, Color::Blue],
+            vec![Color::Yellow, Color::Yellow, Color::Blue],
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+        let cube_tiles: Vec<Color> = vec![
+            cube.green.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.red.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.blue.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.orange.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.white.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.yellow.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+
+        assert!(expected.iter().zip(cube_tiles.iter()).all(|(a, b)| a == b));
+    }
+
+    #[test]
+    fn turn_right_prime() {
+        let cube = Cube::new().mv(Turn::R(TurnType::Prime));
+
+        let expected: Vec<Color> = vec![
+            // Green
+            vec![Color::Green, Color::Green, Color::White],
+            vec![Color::Green, Color::Green, Color::White],
+            vec![Color::Green, Color::Green, Color::White],
+            // Red
+            vec![Color::Red; 9],
+            // Blue
+            vec![Color::Yellow, Color::Blue, Color::Blue],
+            vec![Color::Yellow, Color::Blue, Color::Blue],
+            vec![Color::Yellow, Color::Blue, Color::Blue],
+            // Orange
+            vec![Color::Orange; 9],
+            // White
+            vec![Color::White, Color::White, Color::Blue],
+            vec![Color::White, Color::White, Color::Blue],
+            vec![Color::White, Color::White, Color::Blue],
+            // Yellow
+            vec![Color::Yellow, Color::Yellow, Color::Green],
+            vec![Color::Yellow, Color::Yellow, Color::Green],
+            vec![Color::Yellow, Color::Yellow, Color::Green],
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+        let cube_tiles: Vec<Color> = vec![
+            cube.green.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.red.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.blue.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.orange.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.white.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.yellow.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+
+        assert!(expected.iter().zip(cube_tiles.iter()).all(|(a, b)| a == b));
+    }
+
+    #[test]
+    fn turn_right_double() {
+        let cube = Cube::new().mv(Turn::R(TurnType::Double));
+
+        let expected: Vec<Color> = vec![
+            // Green
+            vec![Color::Green, Color::Green, Color::Blue],
+            vec![Color::Green, Color::Green, Color::Blue],
+            vec![Color::Green, Color::Green, Color::Blue],
+            // Red
+            vec![Color::Red; 9],
+            // Blue
+            vec![Color::Green, Color::Blue, Color::Blue],
+            vec![Color::Green, Color::Blue, Color::Blue],
+            vec![Color::Green, Color::Blue, Color::Blue],
+            // Orange
+            vec![Color::Orange; 9],
+            // White
+            vec![Color::White, Color::White, Color::Yellow],
+            vec![Color::White, Color::White, Color::Yellow],
+            vec![Color::White, Color::White, Color::Yellow],
+            // Yellow
+            vec![Color::Yellow, Color::Yellow, Color::White],
+            vec![Color::Yellow, Color::Yellow, Color::White],
+            vec![Color::Yellow, Color::Yellow, Color::White],
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+        let cube_tiles: Vec<Color> = vec![
+            cube.green.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.red.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.blue.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.orange.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.white.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.yellow.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+
+        assert!(expected.iter().zip(cube_tiles.iter()).all(|(a, b)| a == b));
+    }
+
+    #[test]
+    fn turn_left() {
+        let cube = Cube::new().mv(Turn::L(TurnType::Clock));
+
+        let expected: Vec<Color> = vec![
+            // Green
+            vec![Color::White, Color::Green, Color::Green],
+            vec![Color::White, Color::Green, Color::Green],
+            vec![Color::White, Color::Green, Color::Green],
+            // Red
+            vec![Color::Red; 9],
+            // Blue
+            vec![Color::Blue, Color::Blue, Color::Yellow],
+            vec![Color::Blue, Color::Blue, Color::Yellow],
+            vec![Color::Blue, Color::Blue, Color::Yellow],
+            // Orange
+            vec![Color::Orange; 9],
+            // White
+            vec![Color::Blue, Color::White, Color::White],
+            vec![Color::Blue, Color::White, Color::White],
+            vec![Color::Blue, Color::White, Color::White],
+            // Yellow
+            vec![Color::Green, Color::Yellow, Color::Yellow],
+            vec![Color::Green, Color::Yellow, Color::Yellow],
+            vec![Color::Green, Color::Yellow, Color::Yellow],
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+        let cube_tiles: Vec<Color> = vec![
+            cube.green.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.red.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.blue.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.orange.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.white.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.yellow.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+
+        assert!(expected.iter().zip(cube_tiles.iter()).all(|(a, b)| a == b));
+    }
+
+    #[test]
+    fn turn_left_prime() {
+        let cube = Cube::new().mv(Turn::L(TurnType::Prime));
+
+        let expected: Vec<Color> = vec![
+            // Green
+            vec![Color::Yellow, Color::Green, Color::Green],
+            vec![Color::Yellow, Color::Green, Color::Green],
+            vec![Color::Yellow, Color::Green, Color::Green],
+            // Red
+            vec![Color::Red; 9],
+            // Blue
+            vec![Color::Blue, Color::Blue, Color::White],
+            vec![Color::Blue, Color::Blue, Color::White],
+            vec![Color::Blue, Color::Blue, Color::White],
+            // Orange
+            vec![Color::Orange; 9],
+            // White
+            vec![Color::Green, Color::White, Color::White],
+            vec![Color::Green, Color::White, Color::White],
+            vec![Color::Green, Color::White, Color::White],
+            // Yellow
+            vec![Color::Blue, Color::Yellow, Color::Yellow],
+            vec![Color::Blue, Color::Yellow, Color::Yellow],
+            vec![Color::Blue, Color::Yellow, Color::Yellow],
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+        let cube_tiles: Vec<Color> = vec![
+            cube.green.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.red.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.blue.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.orange.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.white.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.yellow.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+
+        assert!(expected.iter().zip(cube_tiles.iter()).all(|(a, b)| a == b));
+    }
+
+    #[test]
+    fn turn_left_double() {
+        let cube = Cube::new().mv(Turn::L(TurnType::Double));
+
+        let expected: Vec<Color> = vec![
+            // Green
+            vec![Color::Blue, Color::Green, Color::Green],
+            vec![Color::Blue, Color::Green, Color::Green],
+            vec![Color::Blue, Color::Green, Color::Green],
+            // Red
+            vec![Color::Red; 9],
+            // Blue
+            vec![Color::Blue, Color::Blue, Color::Green],
+            vec![Color::Blue, Color::Blue, Color::Green],
+            vec![Color::Blue, Color::Blue, Color::Green],
+            // Orange
+            vec![Color::Orange; 9],
+            // White
+            vec![Color::Yellow, Color::White, Color::White],
+            vec![Color::Yellow, Color::White, Color::White],
+            vec![Color::Yellow, Color::White, Color::White],
+            // Yellow
+            vec![Color::White, Color::Yellow, Color::Yellow],
+            vec![Color::White, Color::Yellow, Color::Yellow],
+            vec![Color::White, Color::Yellow, Color::Yellow],
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+        let cube_tiles: Vec<Color> = vec![
+            cube.green.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.red.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.blue.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.orange.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.white.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.yellow.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+
+        assert!(expected.iter().zip(cube_tiles.iter()).all(|(a, b)| a == b));
+    }
+
+    #[test]
+    fn turn_front() {
+        let cube = Cube::new().mv(Turn::F(TurnType::Clock));
+
+        let expected: Vec<Color> = vec![
+            // Green
+            vec![Color::Green; 9],
+            // Red
+            vec![Color::White, Color::Red, Color::Red],
+            vec![Color::White, Color::Red, Color::Red],
+            vec![Color::White, Color::Red, Color::Red],
+            // Blue
+            vec![Color::Blue; 9],
+            // Orange
+            vec![Color::Orange, Color::Orange, Color::Yellow],
+            vec![Color::Orange, Color::Orange, Color::Yellow],
+            vec![Color::Orange, Color::Orange, Color::Yellow],
+            // White
+            vec![Color::White; 6],
+            vec![Color::Orange; 3],
+            // Yellow
+            vec![Color::Red; 3],
+            vec![Color::Yellow; 6],
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+        let cube_tiles: Vec<Color> = vec![
+            cube.green.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.red.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.blue.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.orange.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.white.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.yellow.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+
+        assert!(expected.iter().zip(cube_tiles.iter()).all(|(a, b)| a == b));
+    }
+
+    #[test]
+    fn turn_front_prime() {
+        let cube = Cube::new().mv(Turn::F(TurnType::Prime));
+
+        let expected: Vec<Color> = vec![
+            // Green
+            vec![Color::Green; 9],
+            // Red
+            vec![Color::Yellow, Color::Red, Color::Red],
+            vec![Color::Yellow, Color::Red, Color::Red],
+            vec![Color::Yellow, Color::Red, Color::Red],
+            // Blue
+            vec![Color::Blue; 9],
+            // Orange
+            vec![Color::Orange, Color::Orange, Color::White],
+            vec![Color::Orange, Color::Orange, Color::White],
+            vec![Color::Orange, Color::Orange, Color::White],
+            // White
+            vec![Color::White; 6],
+            vec![Color::Red; 3],
+            // Yellow
+            vec![Color::Orange; 3],
+            vec![Color::Yellow; 6],
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+        let cube_tiles: Vec<Color> = vec![
+            cube.green.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.red.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.blue.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.orange.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.white.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.yellow.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+
+        assert!(expected.iter().zip(cube_tiles.iter()).all(|(a, b)| a == b));
+    }
+
+    #[test]
+    fn turn_front_double() {
+        let cube = Cube::new().mv(Turn::F(TurnType::Double));
+
+        let expected: Vec<Color> = vec![
+            // Green
+            vec![Color::Green; 9],
+            // Red
+            vec![Color::Orange, Color::Red, Color::Red],
+            vec![Color::Orange, Color::Red, Color::Red],
+            vec![Color::Orange, Color::Red, Color::Red],
+            // Blue
+            vec![Color::Blue; 9],
+            // Orange
+            vec![Color::Orange, Color::Orange, Color::Red],
+            vec![Color::Orange, Color::Orange, Color::Red],
+            vec![Color::Orange, Color::Orange, Color::Red],
+            // White
+            vec![Color::White; 6],
+            vec![Color::Yellow; 3],
+            // Yellow
+            vec![Color::White; 3],
+            vec![Color::Yellow; 6],
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+        let cube_tiles: Vec<Color> = vec![
+            cube.green.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.red.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.blue.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.orange.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.white.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.yellow.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+
+        assert!(expected.iter().zip(cube_tiles.iter()).all(|(a, b)| a == b));
+    }
+
+    #[test]
+    fn turn_back() {
+        let cube = Cube::new().mv(Turn::B(TurnType::Clock));
+
+        let expected: Vec<Color> = vec![
+            // Green
+            vec![Color::Green; 9],
+            // Red
+            vec![Color::Red, Color::Red, Color::Yellow],
+            vec![Color::Red, Color::Red, Color::Yellow],
+            vec![Color::Red, Color::Red, Color::Yellow],
+            // Blue
+            vec![Color::Blue; 9],
+            // Orange
+            vec![Color::White, Color::Orange, Color::Orange],
+            vec![Color::White, Color::Orange, Color::Orange],
+            vec![Color::White, Color::Orange, Color::Orange],
+            // White
+            vec![Color::Red; 3],
+            vec![Color::White; 6],
+            // Yellow
+            vec![Color::Yellow; 6],
+            vec![Color::Orange; 3],
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+        let cube_tiles: Vec<Color> = vec![
+            cube.green.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.red.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.blue.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.orange.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.white.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.yellow.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+
+        assert!(expected.iter().zip(cube_tiles.iter()).all(|(a, b)| a == b));
+    }
+
+    #[test]
+    fn turn_back_prime() {
+        let cube = Cube::new().mv(Turn::B(TurnType::Prime));
+
+        let expected: Vec<Color> = vec![
+            // Green
+            vec![Color::Green; 9],
+            // Red
+            vec![Color::Red, Color::Red, Color::White],
+            vec![Color::Red, Color::Red, Color::White],
+            vec![Color::Red, Color::Red, Color::White],
+            // Blue
+            vec![Color::Blue; 9],
+            // Orange
+            vec![Color::Yellow, Color::Orange, Color::Orange],
+            vec![Color::Yellow, Color::Orange, Color::Orange],
+            vec![Color::Yellow, Color::Orange, Color::Orange],
+            // White
+            vec![Color::Orange; 3],
+            vec![Color::White; 6],
+            // Yellow
+            vec![Color::Yellow; 6],
+            vec![Color::Red; 3],
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+        let cube_tiles: Vec<Color> = vec![
+            cube.green.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.red.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.blue.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.orange.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.white.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.yellow.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+
+        assert!(expected.iter().zip(cube_tiles.iter()).all(|(a, b)| a == b));
+    }
+
+    #[test]
+    fn turn_back_double() {
+        let cube = Cube::new().mv(Turn::B(TurnType::Double));
+
+        let expected: Vec<Color> = vec![
+            // Green
+            vec![Color::Green; 9],
+            // Red
+            vec![Color::Red, Color::Red, Color::Orange],
+            vec![Color::Red, Color::Red, Color::Orange],
+            vec![Color::Red, Color::Red, Color::Orange],
+            // Blue
+            vec![Color::Blue; 9],
+            // Orange
+            vec![Color::Red, Color::Orange, Color::Orange],
+            vec![Color::Red, Color::Orange, Color::Orange],
+            vec![Color::Red, Color::Orange, Color::Orange],
+            // White
+            vec![Color::Yellow; 3],
+            vec![Color::White; 6],
+            // Yellow
+            vec![Color::Yellow; 6],
+            vec![Color::White; 3],
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+        let cube_tiles: Vec<Color> = vec![
+            cube.green.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.red.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.blue.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.orange.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.white.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+            cube.yellow.tiles.into_iter().flatten().collect::<Vec<Color>>(),
+        ]
+        .into_iter()
+        .flatten()
+        .collect();
+
+        assert!(expected.iter().zip(cube_tiles.iter()).all(|(a, b)| a == b));
+    }
 }
